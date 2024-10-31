@@ -1,3 +1,3 @@
 # Projekt knjižnica
 ## Nastava na kolegiju Razvoj interaktivnih web aplikacija
-# KILL YOURSELF
+# KILL YOURSELF *lightning*
