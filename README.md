@@ -1,3 +1,4 @@
 # Projekt knjižnica
 ## Nastava na kolegiju Razvoj interaktivnih web aplikacija
-# KILL YOURSELF *lightning*
+
+Projekt se razvija u Quasar.js i Node.js razvojnom okvirima
