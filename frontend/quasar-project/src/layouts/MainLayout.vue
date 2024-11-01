@@ -54,7 +54,7 @@ defineOptions({
 })
 
 const linksList = [
-  {{
+  {
     title: 'Početna',
     caption: 'Početna stranica',
     icon: 'school',
