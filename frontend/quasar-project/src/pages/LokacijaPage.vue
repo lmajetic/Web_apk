@@ -1,10 +1,5 @@
 <template>
-  <div class="text-h3 text-weight-bolder text-center">Lokacija</div>
-  <div class="text-body1">Ovo je stranica s našom lokacijom
-    </div>
-  <q-page padding>
-    <div id="map" style="height:500px;"></div>
-  </q-page>
+      <div id="map" style="height:500px;"></div>
 </template>
 
 <script>
@@ -28,5 +23,4 @@ export default {
       }
     }
 }
-
 </script>
