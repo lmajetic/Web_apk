@@ -1,9 +1,11 @@
 <template>
+  <div class="text-h3 text-weight-bolder text-center">Naslovnica</div>
+  <div class="text-body1">Ovo je pocetna stranica
+    </div>
   <q-page class="flex flex-center">
     <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
+    alt="Knjiznica slika"
+    src="~assets/library.jpg"
     >
   </q-page>
 </template>
