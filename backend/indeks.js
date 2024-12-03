@@ -30,12 +30,47 @@ connection.connect(function(err) {
     console.log("Server running at port: " + port);
 });
 
-app.get("/api/knjige", (req, res) => {
-    connection.query("SELECT * FROM knjige", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
+app.get("/api/knjige", (request, response) => {
+    
+  connection.query("SELECT * FROM knjiga", (error, results) => {
+    if (error) throw error;
+    response.send(results);
+  });
+/*
+  request - slanje zahtjeva s klijentske strane
+  response - slanje odgovora sa serverske strane
+
+  npm install -g nodemon
+*/
+  //response.send("popis knjiga");
 });
+
+app.get("/api/knjige/:id", (request, response) => {
+  const id = request.params.id;
+  connection.query("SELECT * FROM knjiga WHERE id = ?", id, (error, results) => {
+      if (error) throw error;
+      response.send(results);
+    });
+  //response.send("jedna knjiga "+id);
+});
+
+app.post("/api/rezerv_knjige", (request, response) => {
+  const data = request.body;
+  rezervacija = [[data.datum, data.id_knjiga, data.id_korisnik]]
+
+  connection.query("INSERT INTO rezervacija (datum_rez, knjiga, korisnik) VALUES ?", [rezervacija], (error, results) => {
+    if (error) throw error;
+    response.send(results);
+  });
+  
+  //response.send("Poslano "+data.id_knjiga);
+});
+
+app.listen(port, () => {
+  console.log("Server running at port: " + port);
+});
+
+/* Upiti sa nastave 21/11/24
 
 app.get("/api/knjige/:naslov", (req, res) => {
     connection.query("SELECT * FROM knjiga WHERE naslov like "%naziv%"", (error, results) => {
@@ -116,3 +151,4 @@ app.put("/api/rezerv_knjige/:id_knjiga", (req, res) => {
     });
 });
 
+*/
