@@ -66,9 +66,11 @@ app.post("/api/rezerv_knjige", (request, response) => {
   //response.send("Poslano "+data.id_knjiga);
 });
 
+/*
 app.listen(port, () => {
   console.log("Server running at port: " + port);
 });
+*/
 
 /* Upiti sa nastave 21/11/24
 
