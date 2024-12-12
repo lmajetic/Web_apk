@@ -9,6 +9,8 @@ const port = 3000;
 // Parser za JSON podatke
 app.use(bodyParser.json());
 
+app.use(cors());
+
 // Parser za podatke iz formi
 app.use(bodyParser.urlencoded({ extended: true }));
 

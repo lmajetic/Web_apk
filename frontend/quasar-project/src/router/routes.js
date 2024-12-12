@@ -10,6 +10,7 @@ const routes = [
       { path: '/lokacija', component: () => import('pages/LokacijaPage.vue') },
       { path: '/login', component: () => import('pages/LoginPage.vue') },
       { path: '/registracija', component: () => import('pages/RegistracijaPage.vue') },
+      { path: '/popisKnjigaBaza', component: () => import('pages/PopisKnjigaBazaPage.vue') },
     ]
   },
 
