@@ -1,158 +1,84 @@
 const express = require("express");
-const cors = require("cors");
+const cors = require("cors");  // Import cors
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 
 const app = express();
 const port = 3000;
 
-// Parser za JSON podatke
+// Enable CORS for requests from localhost:9000 (Quasar frontend)
+app.use(cors({
+    origin: 'http://localhost:9000',  // Allow requests from your Quasar frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization']  // Allow specific headers
+}));
+
+// Parser for JSON data
 app.use(bodyParser.json());
 
-app.use(cors());
-
-// Parser za podatke iz formi
+// Parser for data from forms
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// MySQL connection setup
 const connection = mysql.createConnection({
     host: 'ucka.veleri.hr',
     user: 'lmajetic',
     password: '11',
     database: 'lmajetic'
-  });
-  
+});
+
 app.use(express.urlencoded({ extended: true }));
-  
-connection.connect(function(err) {
+
+connection.connect(function (err) {
     if (err) throw err;
-    console.log("Connected!");
-  });
-
-  app.listen(port, () => {
-    console.log("Server running at port: " + port);
+    console.log("Connected to MySQL!");
 });
 
-app.get("/api/knjige", (request, response) => {
-    
-  connection.query("SELECT * FROM knjiga", (error, results) => {
-    if (error) throw error;
-    response.send(results);
-  });
-/*
-  request - slanje zahtjeva s klijentske strane
-  response - slanje odgovora sa serverske strane
+// Define your API routes
 
-  npm install -g nodemon
-*/
-  //response.send("popis knjiga");
-});
-
-app.get("/api/knjige/:id", (request, response) => {
-  const id = request.params.id;
-  connection.query("SELECT * FROM knjiga WHERE id = ?", id, (error, results) => {
-      if (error) throw error;
-      response.send(results);
+app.get("/api/knjige", (req, res) => {
+    connection.query("SELECT * FROM knjiga", (error, results) => {
+        if (error) throw error;
+        res.send(results);
     });
-  //response.send("jedna knjiga "+id);
 });
 
-app.post("/api/rezerv_knjige", (request, response) => {
-  const data = request.body;
-  rezervacija = [[data.datum, data.id_knjiga, data.id_korisnik]]
-
-  connection.query("INSERT INTO rezervacija (datum_rez, knjiga, korisnik) VALUES ?", [rezervacija], (error, results) => {
-    if (error) throw error;
-    response.send(results);
-  });
-  
-  //response.send("Poslano "+data.id_knjiga);
-});
-
-/*
-app.listen(port, () => {
-  console.log("Server running at port: " + port);
-});
-*/
-
-/* Upiti sa nastave 21/11/24
-
-app.get("/api/knjige/:naslov", (req, res) => {
-    connection.query("SELECT * FROM knjiga WHERE naslov like "%naziv%"", (error, results) => {
-      if (error) throw error;
-      res.send(results);
+app.get("/api/rezervirane_knjige", (req, res) => {
+    const query = `
+        SELECT rezervacija.id, rezervacija.datum_rez, knjiga.naslov, knjiga.autor, korisnik.ime, korisnik.prezime
+        FROM rezervacija
+        JOIN knjiga ON rezervacija.knjiga = knjiga.id
+        JOIN korisnik ON rezervacija.korisnik = korisnik.id
+    `;
+    connection.query(query, (error, results) => {
+        if (error) throw error;
+        res.send(results);
     });
+});
+
+app.get("/api/knjige/:id", (req, res) => {
+    const id = req.params.id;
+    res.send("jedna knjiga " + id);
 });
 
 app.get("/api/knjige/:autor", (req, res) => {
-    connection.query("SELECT * FROM knjiga WHERE autor like "%autor%"", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
-});
-
-app.get("/api/slob_knjige/", (req, res) => {
-    connection.query("SELECT (knjiga.stanje - count(rezervacija.knjiga)) as slobodne, knjiga.id, knjiga.naslov, knjiga.stanje FROM `knjiga` left join rezervacija on knjiga.id=rezervacija.knjiga group by knjiga.id", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
-});
-
-app.get("/api/slob_knjige/:id_knjige", (req, res) => {
-    connection.query("SELECT * FROM knjiga WHERE id_knjige like "%id_knjige%"", (error, results) => {
+    const autor = req.params.autor;  // Use the correct variable
+    connection.query("SELECT * FROM knjiga WHERE autor LIKE ?", [`%${autor}%`], (error, results) => {
         if (error) throw error;
         res.send(results);
-      });
+    });
 });
 
 app.post("/api/rezerv_knjige", (req, res) => {
     const data = req.body;
-    rezervacija = [[date.today, data.id_knjiga, data.id_korisnik]]
-    connection.query("INSERT INTO rezervacija (datum, knjiga, korisnik) VALUES ?", [rezervacija], (error, results) => {
-      if (error) throw error;
-      res.send(results);
+    const rezervacija = [[data.datum, data.id_knjiga, data.id_korisnik]];
+    connection.query("INSERT INTO rezervacija (datum_rez, knjiga, korisnik) VALUES ?", [rezervacija], (error, results) => {
+        if (error) throw error;
+        res.send(results);
     });
 });
 
-app.get("/api/rezerv_knjige_korisnici", (req, res) => {
-    connection.query("SELECT * FROM knjiga, rezervacija, korisnik WHERE knjiga.id=rezervacija.knjiga and korisnik.id=rezervacija.korisnik", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
+// Start the server
+app.listen(port, () => {
+    console.log("Server running at port: " + port);
 });
-
-app.get("/api/rezerv_knjige/:id_korisnik", (req, res) => {
-    connection.query("SELECT * FROM knjiga, rezervacija, korisnik WHERE knjiga.id=rezervacija.knjiga and korisnik.id=rezervacija.korisnik AND korisnik.id=id_korisnik", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
-});
-
-app.get("/api/rezerv_knjige/:id_knjiga", (req, res) => {
-    connection.query("SELECT * FROM knjiga, rezervacija, korisnik WHERE knjiga.id=rezervacija.knjiga and korisnik.id=rezervacija.korisnik AND knjiga.id=id_knjiga", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
-});
-
-app.get("/api/korisnici", (req, res) => {
-    connection.query("SELECT * FROM korisnik", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
-});
-
-app.get("/api/korisnici/:id_korisnik", (req, res) => {
-    connection.query("SELECT * FROM korisnik WHERE id_korisnik like "%id_korisnik%"", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
-});
-
-app.put("/api/rezerv_knjige/:id_knjiga", (req, res) => {
-    connection.query("INSERT INTO rezervacija (datum, knjiga, korisnik) VALUES ('2024-10-31', 3, 2)", (error, results) => {
-      if (error) throw error;
-      res.send(results);
-    });
-});
-
-*/
