@@ -78,6 +78,15 @@ app.post("/api/rezerv_knjige", (req, res) => {
     });
 });
 
+app.post("/api/unos_knjige", (req, res) => {
+    const data = req.body;
+    const knjiga = [[data.naslov, data.autor, data.opis, data.slika, data.stanje]];
+    connection.query("INSERT INTO knjiga (naslov, autor, opis, slika, stanje) VALUES ?", [knjiga], (error, results) => {
+        if (error) throw error;
+        res.send(results);
+    });
+});
+
 // Start the server
 app.listen(port, () => {
     console.log("Server running at port: " + port);

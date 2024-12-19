@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Knjižnica
+          Knjižnica (admin)
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
@@ -50,7 +50,7 @@ import { ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 
 defineOptions({
-  name: 'MainLayout'
+  name: 'AdminLayout'
 })
 
 const linksList = [
@@ -58,43 +58,37 @@ const linksList = [
     title: 'Početna',
     caption: 'Početna stranica',
     icon: 'school',
-    link: '#/'
+    link: '#/admin'
   },
   {
     title: 'Popis knjiga',
     caption: 'Popis svih knjiga u knjižnici',
     icon: 'book',
-    link: '#/popisKnjiga'
+    link: '#/admin/popis_knjiga'
   },
   {
     title: 'Pretraživanje',
     caption: 'Pretraživanje knjiga',
     icon: 'book',
-    link: '#/pretrazivanje'
+    link: '#/admin/pretrazivanje'
   },
   {
-    title: 'O nama',
-    caption: 'Informacije o nama',
+    title: 'Popis korisnika',
+    caption: 'Pregled svih korisnika',
     icon: 'record_voice_over',
-    link: '#/oNama'
+    link: '#/admin/popis_korisnika'
   },
   {
-    title: 'Lokacija',
-    caption: 'Kako do nas',
+    title: 'Unos knjiga',
+    caption: 'Unos novih knjiga',
     icon: 'rss_feed',
-    link: '#/lokacija'
+    link: '#/admin/unos_knjiga'
   },
   {
-    title: 'Login',
-    caption: 'Ulogirajte se',
+    title: 'Logout',
+    caption: 'Odlogirajte se',
     icon: 'public',
-    link: '#/login'
-  },
-  {
-    title: 'Registracija',
-    caption: 'Reistrirajte se',
-    icon: 'favorite',
-    link: '#/registracija'
+    link: '#/logout'
   },
   {
     title: 'Popis knjiga baza',
